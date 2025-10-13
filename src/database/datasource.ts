@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { join } from 'path';
-// import 'dotenv/config';
+import 'dotenv/config';
 
 // console.log({
 //   host: process.env.DB_HOST,
@@ -15,7 +15,7 @@ export default new DataSource({
 	username: process.env.DB_USER || 'postgres',
 	password: process.env.DB_PASS || 'postgres',
 	database: process.env.DB_NAME || 'hospital_booking',
-	entities: [join(__dirname, 'src/**/*.entity{.ts,.js}')],
-	migrations: [join(__dirname, 'src/database/migrations/*{.ts,.js}')],
+  entities: [join(__dirname, '../modules/**/entities/*.entity.{ts,js}')],
+  migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
 	synchronize: false, 
 });
