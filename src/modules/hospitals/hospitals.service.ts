@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateHospitalDto } from './dto/create-hospital.dto';
 import { UpdateHospitalDto } from './dto/update-hospital.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Hospital } from './entities/hospital.entity';
 
 @Injectable()
 export class HospitalsService {
-  create(createHospitalDto: CreateHospitalDto) {
-    return 'This action adds a new hospital';
+  constructor(
+    @InjectRepository(Hospital)
+    private readonly hospitalRepo: Repository<Hospital>
+  ){}
+
+  async create(createHospitalDto: CreateHospitalDto): Promise<Hospital> {
+    const hospital = this.hospitalRepo.create(createHospitalDto);
+    return this.hospitalRepo.save(hospital);
   }
 
-  findAll() {
-    return `This action returns all hospitals`;
+  async findAll(): Promise<Hospital[]> {
+    return this.hospitalRepo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} hospital`;
+  async findOne(id: number): Promise<Hospital> {
+    const hospital = await this.hospitalRepo.findOne({ where: { id } });
+    if (!hospital) throw new NotFoundException(`Hospital #${id} not found`);
+    return hospital;
   }
 
-  update(id: number, updateHospitalDto: UpdateHospitalDto) {
-    return `This action updates a #${id} hospital`;
+  async update(id: number, updateHospitalDto: UpdateHospitalDto): Promise<Hospital> {
+    const hospital = await this.findOne(id);
+    Object.assign(hospital, updateHospitalDto);
+    return this.hospitalRepo.save(hospital);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} hospital`;
+  async remove(id: number): Promise<void> {
+    const hospital = await this.findOne(id);
+    await this.hospitalRepo.remove(hospital);
   }
 }
