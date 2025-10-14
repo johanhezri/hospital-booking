@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { HospitalsModule } from './modules/hospitals/hospitals.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { databaseConfig } from './config/database.config';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -11,7 +13,9 @@ import { databaseConfig } from './config/database.config';
       ...databaseConfig,
       autoLoadEntities: true,
     }),
-    HospitalsModule
+    HospitalsModule,
+    AuthModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],
