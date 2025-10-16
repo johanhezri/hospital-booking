@@ -18,11 +18,13 @@ export class UsersService {
   }
 
   findAll() {
+    // return this.repo.find();
     return `This action returns all users`;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
+    // return this.repo.findOne({ where: { id } });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

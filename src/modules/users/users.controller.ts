@@ -20,17 +20,17 @@ export class UsersController {
 	@UseGuards(AuthGuard('jwt'))
 	@Get('profile')
 	getProfile() {
-		return { message: 'You are authenticated!' };
-	}
-
-	@Post()
-	create(@Body() createUserDto: CreateUserDto) {
-		return this.usersService.create(createUserDto);
+		return { message: 'You are authenticated.' };
 	}
 
 	@Get()
 	findAll() {
 		return this.usersService.findAll();
+	}
+
+	@Post()
+	create(@Body() createUserDto: CreateUserDto) {
+		return this.usersService.create(createUserDto);
 	}
 
 	@Get(':id')

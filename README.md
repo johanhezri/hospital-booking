@@ -122,9 +122,10 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE). -->
 - run: npm run migration:run
 - revert: npm run migration:revert
 
-## Code flow
+## Code Flow
 1. login: auth/login
-2.
+2. validate login: users/profile
+3.
 
 ## Postman Structure
 EncoreMed API Tests
