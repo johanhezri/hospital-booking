@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Post,
+	Body,
+	Patch,
+	Param,
+	Delete,
+	UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,36 +15,36 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
-  
-  @UseGuards(AuthGuard('jwt'))
-  @Get('profile')
-  getProfile() {
-    return { message: 'You are authenticated!' };
-  }
+	constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+	@UseGuards(AuthGuard('jwt'))
+	@Get('profile')
+	getProfile() {
+		return { message: 'You are authenticated!' };
+	}
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
+	@Post()
+	create(@Body() createUserDto: CreateUserDto) {
+		return this.usersService.create(createUserDto);
+	}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
+	@Get()
+	findAll() {
+		return this.usersService.findAll();
+	}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
+	@Get(':id')
+	findOne(@Param('id') id: string) {
+		return this.usersService.findOne(+id);
+	}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
-  }
+	@Patch(':id')
+	update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+		return this.usersService.update(+id, updateUserDto);
+	}
+
+	@Delete(':id')
+	remove(@Param('id') id: string) {
+		return this.usersService.remove(+id);
+	}
 }

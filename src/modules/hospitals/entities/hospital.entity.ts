@@ -15,6 +15,11 @@ export class Hospital {
   @Column({ name: 'address', nullable: true })
   address: string;
 
+  @Column() timezone: string;
+  @Column({ nullable: true }) smtp_host: string;
+  @Column({ nullable: true }) smtp_user: string;
+  @Column({ nullable: true }) smtp_pass: string;
+
   @ApiProperty({
     example: '2025-10-13T08:45:30.000Z',
     description: 'Timestamp when the hospital record was created (auto-generated)',

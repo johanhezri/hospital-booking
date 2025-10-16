@@ -109,3 +109,50 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 <!-- ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE). -->
+
+
+## Database
+
+### Migrations
+
+1. Seeding - npm run seed:run -d src/database/datasource.ts -n Admin1760604629025
+
+2. Migration (cd hospital-booking)
+- generate: npm run migration:generate src/database/"migrationName"
+- run: npm run migration:run
+- revert: npm run migration:revert
+
+## Code flow
+1. login: auth/login
+2.
+
+## Postman Structure
+EncoreMed API Tests
+│
+├─ Auth
+│   ├─ Register (Patient)
+│   ├─ Login (Patient)
+│   ├─ Refresh Token
+│   └─ Logout
+│
+├─ Admin
+│   ├─ Create Hospital
+│   ├─ Get Hospitals
+│
+├─ Staff
+│   ├─ Login (Staff)
+│   ├─ Add Doctor
+│   ├─ Add Doctor Schedule
+│   ├─ View Doctor Schedule
+│   ├─ Book Appointment (for patient)
+│   └─ Cancel Appointment
+│
+├─ Patient
+│   ├─ View Hospitals
+│   ├─ View Doctors by Hospital
+│   ├─ View Available Slots
+│   ├─ Book Appointment
+│   └─ Cancel Appointment
+│
+└─ CRON (manual trigger)
+    └─ Send Reminders (simulate)

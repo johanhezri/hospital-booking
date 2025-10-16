@@ -7,5 +7,6 @@ export const databaseConfig = {
   username: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASS || 'postgres',
   database: process.env.DB_NAME || 'hospital_booking',
+  autoLoadEntities: true,
   synchronize: false,
 };
