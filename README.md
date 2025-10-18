@@ -118,14 +118,18 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE). -->
 1. Seeding - npm run seed:run -d src/database/datasource.ts -n Admin1760604629025
 
 2. Migration (cd hospital-booking)
-- generate: npm run migration:generate src/database/"migrationName"
+- generate: npm run migration:generate src/database/migrations/"migrationName"
 - run: npm run migration:run
 - revert: npm run migration:revert
 
 ## Code Flow
-1. login: auth/login
-2. validate login: users/profile
-3.
+Auth
+  1. login: /auth/login
+  2. refresh token: /auth/refresh
+  3. create hospital:
+  4. create doctor(staff): /register/doctor
+  5. create patient: /register/patient
+
 
 ## Postman Structure
 EncoreMed API Tests

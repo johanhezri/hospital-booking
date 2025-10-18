@@ -8,17 +8,16 @@ export class MailService {
 	async sendHospitalCreatedNotification(email: string, hospitalName: string) {
 		await this.mailerService.sendMail({
 			to: email,
-			subject: 'Hospital Registered Successfully',
+			subject: 'Successfully Registered Hospital',
 			text: `Hospital "${hospitalName}" has been registered.`,
 			html: `<p>Hospital <strong>${hospitalName}</strong> has been successfully registered.</p>`,
 		});
 	}
 
 	async sendExampleNotification(email: string, data: string) {
-		console.log('[mailservice] 1...');
-		console.log('email:', email);
-		console.log('data:', data);
-
+		// console.log('[mailservice] 1...');
+		// console.log('email:', email);
+		// console.log('data:', data);
 		await this.mailerService.sendMail({
 			to: email,
 			subject: 'test Email Notification',
@@ -30,9 +29,9 @@ export class MailService {
 	async sendMail({ hospital, to, subject, text }) {
 		await this.mailerService.sendMail({
 			to,
-			subject: 'Hospital Registered Successfully',
+			subject: 'Successfully Registered Hospital',
 			text: `Hospital "${hospital.name}" has been registered.`,
 			html: `<p>Hospital <strong>${hospital.name}</strong> has been successfully registered.</p>`,
 		});
-  }
+	}
 }

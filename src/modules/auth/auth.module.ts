@@ -3,21 +3,22 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { MailService } from '../mail/mail.service';
 import { UsersModule } from '../users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
+import { HospitalsModule } from '../hospitals/hospitals.module';
+import { DoctorsModule } from '../doctors/doctors.module';
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([User]),
 		PassportModule,
 		JwtModule.register({
-			secret: process.env.JWT_SECRET || '100100',
+			secret: process.env.JWT_SECRET,
 			signOptions: { expiresIn: '15m' },
 		}),
-    UsersModule
+		UsersModule,
+		HospitalsModule,
+		DoctorsModule
 	],
 	providers: [AuthService, MailService, JwtStrategy],
 	controllers: [AuthController],

@@ -11,6 +11,9 @@ import { AppointmentsModule } from './modules/appointments/appointments.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CalendarsModule } from './modules/calendars/calendars.module';
 import { JobsModule } from './modules/jobs/jobs.module';
+import { RolesGuard } from './modules/common/guards/roles.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './modules/common/guards/jwt-auth.guard';
 
 @Module({
 	imports: [
@@ -39,9 +42,19 @@ import { JobsModule } from './modules/jobs/jobs.module';
 		AppointmentsModule,
 		CalendarsModule,
 		AppointmentsModule,
-		JobsModule
+		JobsModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [
+		AppService,
+		{
+			provide: APP_GUARD,
+			useClass: JwtAuthGuard,
+		},
+		{
+			provide: APP_GUARD,
+			useClass: RolesGuard,
+		},
+	],
 })
 export class AppModule {}

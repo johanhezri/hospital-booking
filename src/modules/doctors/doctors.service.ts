@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { CreateDoctorDto } from './dto/create-doctor.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { UsersService } from '../users/users.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Doctor } from './entities/doctor.entity';
+import { FindOneOptions, Repository } from 'typeorm';
+import { CreateDoctorDto } from './dto/create-doctor.dto';
 
 @Injectable()
 export class DoctorsService {
-  create(createDoctorDto: CreateDoctorDto) {
-    return 'This action adds a new doctor';
-  }
+	constructor(
+		@InjectRepository(Doctor) private repo: Repository<Doctor>,
+		private usersService: UsersService
+	) {}
 
-  findAll() {
-    return `This action returns all doctors`;
-  }
+	async create(dto: CreateDoctorDto) {
+		const user = await this.usersService.findOne(dto.userId);
+		if (!user) throw new BadRequestException('User not found');
 
-  findOne(id: number) {
-    return `This action returns a #${id} doctor`;
-  }
+		return this.repo.save({
+			user,
+			specialty: dto.specialty,
+			slotDurationMinutes: dto.slotDurationMinutes || 15,
+		});
+	}
 
-  update(id: number, updateDoctorDto: UpdateDoctorDto) {
-    return `This action updates a #${id} doctor`;
-  }
+	findAll() {
+		return this.repo.find();
+	}
 
-  remove(id: number) {
-    return `This action removes a #${id} doctor`;
-  }
+	findOne(id: string, options?: FindOneOptions<Doctor>) {
+		return this.repo.findOne({ where: { id }, ...options });
+	}
+
+	update(id: number, updateDoctorDto: UpdateDoctorDto) {
+		return `This action updates a #${id} doctor`;
+	}
+
+	remove(id: number) {
+		return `This action removes a #${id} doctor`;
+	}
 }

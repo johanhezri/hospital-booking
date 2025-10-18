@@ -25,6 +25,6 @@ export class Admin1760604629025 implements Seeder {
 			role: 'admin',
 		});
 
-		console.log('Admin user seeded successfully!');
+		console.log('Successfully seeded admin user!');
 	}
 }

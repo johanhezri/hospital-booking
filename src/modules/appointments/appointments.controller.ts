@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -8,8 +8,19 @@ export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
   @Post()
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentsService.create(createAppointmentDto);
+  create(@Body() dto: CreateAppointmentDto, @Request() req: any) {
+    const user = req.user;
+
+    let createdByStaffId = null;
+    if (user.role === 'admin' || user.role === 'staff') {
+      createdByStaffId = user.userId;
+    }
+
+    if (user.role === 'patient') {
+      dto.patientId = user.userId;
+    }
+
+    return this.appointmentsService.create(dto);
   }
 
   @Get()

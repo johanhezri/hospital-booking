@@ -1,34 +1,31 @@
 import {
+	BadRequestException,
 	ConflictException,
 	Injectable,
 	UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { RegisterDto } from './dto/register.dto';
 import { UsersService } from '../users/users.service';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
-import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
+import { RegisterPatientDto } from './dto/register-patient.dto';
+import { HospitalsService } from '../hospitals/hospitals.service';
+import { DoctorsService } from '../doctors/doctors.service';
+import { RegisterDoctorDto } from './dto/register-doctor.dto';
 
 @Injectable()
 export class AuthService {
 	constructor(
-		@InjectRepository(User) //! remove
-		private readonly userRepository: Repository<User>, //! remove
 		private readonly usersService: UsersService,
+		private readonly hospitalsService: HospitalsService,
+		private readonly doctorsService: DoctorsService,
 		private jwtService: JwtService
 	) {}
 
 	async validateUser(body: LoginDto): Promise<any> {
 		const { email, password } = body;
-
-		const user = await this.userRepository.findOne({
-			where: { email },
-		});
+		const user = await this.usersService.findOneByEmail(email);
 		if (!user) throw new UnauthorizedException('Invalid credentials');
-		console.log('===== user:', user);
 
 		const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
 		if (!isPasswordValid)
@@ -36,34 +33,6 @@ export class AuthService {
 
 		const { passwordHash, refreshTokenHash, ...result } = user;
 		return result;
-	}
-
-	async login(user: any) {
-		const payload = { username: user.username, sub: user.id };
-		return {
-			access_token: this.jwtService.sign(payload),
-		};
-	}
-
-	async register(dto: RegisterDto) {
-		// register patient
-		// TODO register staff
-		const existing = await this.usersService.findByEmail(dto.email);
-		if (existing) throw new ConflictException('Email already registered');
-
-		const passwordHash = await bcrypt.hash(dto.password, 10);
-
-		const newUser = await this.usersService.create({
-			name: dto.name,
-			email: dto.email,
-			passwordHash,
-			role: 'patient',
-			hospital: dto.hospitalId
-				? ({ id: Number(dto.hospitalId) } as any)
-				: undefined,
-		});
-
-		return newUser;
 	}
 
 	async generateTokens(user: any) {
@@ -75,29 +44,26 @@ export class AuthService {
 		};
 
 		const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
-		const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+		const refreshToken = this.jwtService.sign(payload, { expiresIn: '1d' });
 
-		// hash refresh token before storing
+		// hash refreshToken before storing
 		const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-		await this.userRepository.update(user.id, { refreshTokenHash });
-
+		await this.usersService.update(user.id, { refreshTokenHash });
 		return { accessToken, refreshToken };
 	}
 
 	async refreshTokens(refreshToken: string) {
 		try {
 			const payload = this.jwtService.verify(refreshToken, {
-				secret: process.env.JWT_SECRET || '100100',
+				secret: process.env.JWT_SECRET,
 			});
 
-			const user = await this.userRepository.findOne({
-				where: { id: payload.sub },
-			});
+			const user = await this.usersService.findOne(payload.sub);
 			if (!user || !user.refreshTokenHash) {
 				throw new UnauthorizedException('Invalid refresh token');
 			}
 
-			// verify the hash
+			// verify hash
 			const match = await bcrypt.compare(refreshToken, user.refreshTokenHash);
 			if (!match) throw new UnauthorizedException('Invalid refresh token');
 
@@ -105,5 +71,53 @@ export class AuthService {
 		} catch {
 			throw new UnauthorizedException('Refresh token expired or invalid');
 		}
+	}
+
+	async registerPatient(dto: RegisterPatientDto) {
+		const existing = await this.usersService.findByEmail(dto.email);
+		if (existing) throw new ConflictException('Email already registered');
+
+		const passwordHash = await bcrypt.hash(dto.password, 10);
+
+		return this.usersService.create({
+			name: dto.name,
+			email: dto.email,
+			passwordHash,
+			role: 'patient',
+		});
+	}
+
+	async registerDoctor(dto: RegisterDoctorDto) {
+		const existing = await this.usersService.findByEmail(dto.email);
+		if (existing) throw new ConflictException('Email already registered');
+
+		const hospital = await this.hospitalsService.findActiveById(dto.hospitalId);
+		if (!hospital) {
+			throw new BadRequestException('Invalid or inactive hospital');
+		}
+
+		const passwordHash = await bcrypt.hash(dto.password, 10);
+
+		const user = await this.usersService.create({
+			name: dto.name,
+			email: dto.email,
+			passwordHash,
+			role: 'staff',
+			hospital: { id: dto.hospitalId } as any,
+		});
+		console.log('11111 user:', user);
+
+		await this.doctorsService.create({
+			userId: user.id,
+			specialty: dto.specialty,
+			slotDurationMinutes: dto.slotDurationMinutes,
+		});
+
+		return user;
+	}
+
+	async logout(id: number) {
+		await this.usersService.update(id, { refreshTokenHash: null });
+		return { message: 'Successfully logged out!' };
 	}
 }

@@ -4,25 +4,25 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true, 
-      forbidNonWhitelisted: true,
-      transform: true, 
-    }),
-  );
+	const app = await NestFactory.create(AppModule);
 
-   const config = new DocumentBuilder()
-    .setTitle('Hospital Booking API')
-    .setDescription('RESTful API for managing hospitals')
-    .setVersion('1.0')
-    .build();
+	app.useGlobalPipes(
+		new ValidationPipe({
+			whitelist: true,
+			forbidNonWhitelisted: true,
+			transform: true,
+		})
+	);
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-  
-  await app.listen(process.env.PORT ?? 3000);
+	const config = new DocumentBuilder()
+		.setTitle('Hospital Booking API')
+		.setDescription('RESTful API for managing hospitals')
+		.setVersion('1.0')
+		.build();
+
+	const document = SwaggerModule.createDocument(app, config);
+	SwaggerModule.setup('api', app, document);
+
+	await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
