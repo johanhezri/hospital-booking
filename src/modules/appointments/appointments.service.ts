@@ -82,8 +82,8 @@ export class AppointmentsService {
 		return this.repo.find();
 	}
 
-	findOne(id: number) {
-		return `This action returns a #${id} appointment`;
+	findOne(id: string) {
+		return this.repo.findOne({ where: { id } });
 	}
 
 	update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
@@ -95,12 +95,29 @@ export class AppointmentsService {
 	}
 
 	async findBookedBetween(start: Date, end: Date) {
-		return this.repo.find({
-			where: {
-				status: 'booked',
-				starts_at: Between(start, end),
-			},
-			relations: ['doctor', 'patient'],
-		});
+		return this.repo
+			.createQueryBuilder('a')
+			.leftJoin('a.doctor', 'd')
+			.leftJoin('d.user', 'du')
+			.leftJoin('a.patient', 'p')
+			.select([
+				'a.id',
+				'a.starts_at',
+				'a.ends_at',
+				'a.status',
+				'a.hospital_id',
+
+				'd.id',
+				'du.id',
+				'du.name',
+				'du.email',
+
+				'p.id',
+				'p.name',
+				'p.email',
+			])
+			.where('a.status = :status', { status: 'booked' })
+			.andWhere('a.starts_at BETWEEN :start AND :end', { start, end })
+			.getMany();
 	}
 }

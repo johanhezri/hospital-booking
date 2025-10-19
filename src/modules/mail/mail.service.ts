@@ -15,9 +15,6 @@ export class MailService {
 	}
 
 	async sendExampleNotification(email: string, data: string) {
-		// console.log('[mailservice] 1...');
-		// console.log('email:', email);
-		// console.log('data:', data);
 		await this.mailerService.sendMail({
 			to: email,
 			subject: 'test Email Notification',
@@ -26,12 +23,26 @@ export class MailService {
 		});
 	}
 
-	async sendMail({ hospital, to, subject, text }) {
-		await this.mailerService.sendMail({
+	async sendAppointmentReminderMail({
+		data,
+		time,
+		to,
+		html,
+	}: {
+		data: any;
+		time: string;
+		to: string;
+		html?: string;
+	}) {
+		const text = `Hi ${data.appt.patient.name}, you have an appointment tomorrow at ${time}.`;
+		const subject = `Appointment Reminder with Dr. ${data.appt.doctor.user.name}`;
+		// console.log('to:', to, 'subject:', subject, 'text:', text);
+
+		return this.mailerService.sendMail({
 			to,
-			subject: 'Successfully Registered Hospital',
-			text: `Hospital "${hospital.name}" has been registered.`,
-			html: `<p>Hospital <strong>${hospital.name}</strong> has been successfully registered.</p>`,
+			subject,
+			text,
+			html: html || `<p>${text}</p>`,
 		});
 	}
 }
