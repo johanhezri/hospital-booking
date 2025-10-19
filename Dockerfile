@@ -20,4 +20,15 @@ RUN npm run build
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=991125
+DB_NAME=postgres
+
+# App
+PORT=3000
+JWT_SECRET='100100'

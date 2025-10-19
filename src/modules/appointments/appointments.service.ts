@@ -86,13 +86,13 @@ export class AppointmentsService {
 		return this.repo.findOne({ where: { id } });
 	}
 
-	update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
-		return `This action updates a #${id} appointment`;
-	}
+	// update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
+	// 	return `This action updates a #${id} appointment`;
+	// }
 
-	remove(id: number) {
-		return `This action removes a #${id} appointment`;
-	}
+	// remove(id: number) {
+	// 	return `This action removes a #${id} appointment`;
+	// }
 
 	async findBookedBetween(start: Date, end: Date) {
 		return this.repo

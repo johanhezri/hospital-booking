@@ -1,163 +1,139 @@
-<!-- <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p> -->
+# Hospital Booking
 
-<!-- [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest -->
+A NestJS + TypeORM backend for hospital appointment booking. It supports multiple hospitals, doctors and patients, JWT auth, email notifications, scheduled reminders and a REST API with Swagger docs.
 
-  <p align="left">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <!-- <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p> -->
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Quick links to key files and symbols
 
-## Description
+- Project entry / DI root: [`AppModule`](src/app.module.ts) ([src/app.module.ts](src/app.module.ts))
+- App bootstrap: [`bootstrap()` in src/main.ts](src/main.ts)
+- Database config: [`databaseConfig`](src/config/database.config.ts) ([src/config/database.config.ts](src/config/database.config.ts))
+- TypeORM datasource for migrations/seeds: [src/database/datasource.ts](src/database/datasource.ts)
+- Auth endpoints & logic: [`AuthController`](src/modules/auth/auth.controller.ts) / [`AuthService`](src/modules/auth/auth.service.ts) ([src/modules/auth/auth.controller.ts](src/modules/auth/auth.controller.ts), [src/modules/auth/auth.service.ts](src/modules/auth/auth.service.ts))
+- Hospitals API: [`HospitalsController`](src/modules/hospitals/hospitals.controller.ts) / [`HospitalsService`](src/modules/hospitals/hospitals.service.ts) ([src/modules/hospitals/hospitals.controller.ts](src/modules/hospitals/hospitals.controller.ts), [src/modules/hospitals/hospitals.service.ts](src/modules/hospitals/hospitals.service.ts))
+- Appointments API: [`AppointmentsController`](src/modules/appointments/appointments.controller.ts) / [`AppointmentsService`](src/modules/appointments/appointments.service.ts) ([src/modules/appointments/appointments.controller.ts](src/modules/appointments/appointments.controller.ts), [src/modules/appointments/appointments.service.ts](src/modules/appointments/appointments.service.ts))
+- Doctors API: [`DoctorsController`](src/modules/doctors/doctors.controller.ts) / [`DoctorsService`](src/modules/doctors/doctors.service.ts) ([src/modules/doctors/doctors.controller.ts](src/modules/doctors/doctors.controller.ts), [src/modules/doctors/doctors.service.ts](src/modules/doctors/doctors.service.ts))
+- Calendars (working schedules & slots): [`CalendarsController`](src/modules/calendars/calendars.controller.ts) / [`CalendarsService`](src/modules/calendars/calendars.service.ts) ([src/modules/calendars/calendars.controller.ts](src/modules/calendars/calendars.controller.ts), [src/modules/calendars/calendars.service.ts](src/modules/calendars/calendars.service.ts))
+- Mailer: [`MailService`](src/modules/mail/mail.service.ts) ([src/modules/mail/mail.service.ts](src/modules/mail/mail.service.ts))
+- Scheduled reminders job: [`RemindersService`](src/modules/jobs/reminders.service.ts) ([src/modules/jobs/reminders.service.ts](src/modules/jobs/reminders.service.ts))
+- Package scripts: [package.json](package.json)
 
-<!-- [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository. -->
-A backend system built with [NestJS](https://github.com/nestjs/nest) and TypeORM for managing hospital appointment bookings.
-It supports multiple hospitals, doctors, and patients, providing secure APIs for scheduling and management.
+## Getting started - Local
 
-## Tech Stack
+### 1. Install dependancies
 
-| - | - |
-| Component | Technology |
-| Framework | NestJS |
-ORM	TypeORM
-Database	PostgreSQL
-Authentication	JWT (JSON Web Token)
-API Docs	Swagger / OpenAPI
-Containerization	Docker
-
-<!-- ## Project setup
-
-```bash
-$ npm install
-``` -->
-
-<!-- ## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-``` -->
-
-<!-- ## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-``` -->
-
-<!-- ## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```sh
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure. -->
+### 2. Environment
+   Create a `.env` at project root
 
-<!-- ## Resources
+- DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME
+- JWT_SECRET
+- SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
+- PORT
 
-Check out a few resources that may come in handy when working with NestJS:
+### 3. Database
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com). -->
+- Configure DB details in [src/config/database.config.ts](src/config/database.config.ts).
+- Create DB in Postgres and run migrations:
 
-<!-- ## Support
+```sh
+# run migrations (uses the configured datasource)
+npm run migration:run
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support). -->
+- Seed admin user:
 
-<!-- ## Stay in touch
+```sh
+# uses typeorm-extension and datasource.ts
+npm run seed:run -- -d datasource.ts -n Admin1760604629025
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework) -->
+### 4. Run the app
 
-<!-- ## License
+- Development (watch / hot reload):
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE). -->
+```sh
+npm run start:dev
+```
 
+### 5. Swagger API docs
 
-## Database
+- After starting the server, Swagger is available at: http://localhost:3000/api (see [src/main.ts](src/main.ts))
 
-### Migrations
+Postman / API summary (recommended collections)
 
-1. Seeding - npm run seed:run -d src/database/datasource.ts -n Admin1760604629025
+Top-level route groups and representative endpoints (controller -> route):
 
-2. Migration (cd hospital-booking)
-- generate: npm run migration:generate src/database/migrations/"migrationName"
-- run: npm run migration:run
-- revert: npm run migration:revert
+- Auth [`AuthController`](src/modules/auth/auth.controller.ts) ([src/modules/auth/auth.controller.ts](src/modules/auth/auth.controller.ts))
 
-## Code Flow
-Auth
-  1. login: /auth/login
-  2. refresh token: /auth/refresh
-  3. create hospital:
-  4. create doctor(staff): /register/doctor
-  5. create patient: /register/patient
+  - POST /auth/login - login, returns access + refresh tokens
+  - POST /auth/refresh - refresh tokens
+  - POST /auth/register/patient - create patient
+  - POST /auth/register/doctor - create doctor (requires JWT + Roles: admin/staff)
+  - POST /auth/logout - invalidate refresh token
 
+- Hospitals [`HospitalsController`](src/modules/hospitals/hospitals.controller.ts) ([src/modules/hospitals/hospitals.controller.ts](src/modules/hospitals/hospitals.controller.ts))
 
-## Postman Structure
-EncoreMed API Tests
-│
-├─ Auth
-│   ├─ Register (Patient)
-│   ├─ Login (Patient)
-│   ├─ Refresh Token
-│   └─ Logout
-│
-├─ Admin
-│   ├─ Create Hospital
-│   ├─ Get Hospitals
-│
-├─ Staff
-│   ├─ Login (Staff)
-│   ├─ Add Doctor
-│   ├─ Add Doctor Schedule
-│   ├─ View Doctor Schedule
-│   ├─ Book Appointment (for patient)
-│   └─ Cancel Appointment
-│
-├─ Patient
-│   ├─ View Hospitals
-│   ├─ View Doctors by Hospital
-│   ├─ View Available Slots
-│   ├─ Book Appointment
-│   └─ Cancel Appointment
-│
-└─ CRON (manual trigger)
-    └─ Send Reminders (simulate)
+  - POST /hospitals - create hospital
+  - GET /hospitals - list hospitals
+  - GET /hospitals/:id - get hospital
+  - PATCH /hospitals/:id - update
+  - DELETE /hospitals/:id - soft-delete
+
+- Doctors [`DoctorsController`](src/modules/doctors/doctors.controller.ts) ([src/modules/doctors/doctors.controller.ts](src/modules/doctors/doctors.controller.ts))
+
+  - GET /doctors - list doctors
+  - GET /doctors/:id - doctor detail
+
+- Calendars [`CalendarsController`](src/modules/calendars/calendars.controller.ts) ([src/modules/calendars/calendars.controller.ts](src/modules/calendars/calendars.controller.ts))
+
+  - POST /calendars/:doctorId/schedules?hospitalId=... - add working schedule (authenticated)
+  - GET /calendars/:doctorId/schedules - list schedules
+
+- Appointments [`AppointmentsController`](src/modules/appointments/appointments.controller.ts) ([src/modules/appointments/appointments.controller.ts](src/modules/appointments/appointments.controller.ts))
+
+  - POST /appointments - book appointment (payload: hospitalId, doctorId, patientId, startsAt, endsAt)
+  - GET /appointments - list
+  - GET /appointments/:id - detail
+
+- Reminders / Jobs
+  - Reminders are scheduled by [`RemindersService`](src/modules/jobs/reminders.service.ts) and send emails using [`MailService`](src/modules/mail/mail.service.ts). You can simulate/trigger manually by invoking the job method in a short script or by temporarily enabling a route that calls it during development.
+
+## Postman collection structure
+
+- Auth
+  - Register (Patient)
+  - Login
+  - Refresh Token
+  - Logout
+- Admin
+  - Create Hospital
+  - Get Hospitals
+- Staff
+  - Register Doctor
+  - Add Doctor Schedule
+  - View Doctor Schedule
+  - Book Appointment (for patient)
+  - Cancel Appointment
+- Patient
+  - View Hospitals
+  - View Doctors by Hospital
+  - View Available Slots
+  - Book Appointment
+  - Cancel Appointment
+- CRON (manual)
+  - Trigger Send Reminders (simulate)
+
+## Notes
+
+- JWT strategy reads secret from env: see [`JwtStrategy`](src/modules/auth/strategies/jwt.strategy.ts) ([src/modules/auth/strategies/jwt.strategy.ts](src/modules/auth/strategies/jwt.strategy.ts)).
+- Passwords and refresh tokens are hashed with bcrypt (see [`AuthService`](src/modules/auth/auth.service.ts)).
+- Time handling: doctor schedules and slot computation use Luxon in [`CalendarsService`](src/modules/calendars/calendars.service.ts); timezone conversions helpers are in [`TimezoneService`](src/common/timezone/timezone.service.ts).
+- TypeORM entities are auto-loaded in [src/database/datasource.ts](src/database/datasource.ts).
+- Migrations live under [src/database/migrations](src/database/migrations). If you change entities, generate a migration then run it.
+
+## Docker
+
+- A Dockerfile is included to build and run the app in a container. Ensure env vars and a Postgres instance are available to the container before running. See [Dockerfile](Dockerfile).
